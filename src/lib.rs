@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Rgb { pub r: u8, pub g: u8, pub b: u8 }
 impl Rgb {
     pub fn hex(self) -> String { format!("#{:02x}{:02x}{:02x}", self.r, self.g, self.b) }
@@ -19,7 +19,7 @@ impl Rgb {
     pub fn is_light(self) -> bool { self.luminance() > 0.5 }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Wallpaper {
     pub id: String,
     pub name: String,
@@ -66,7 +66,7 @@ impl fmt::Display for WallpaperError {
 }
 impl std::error::Error for WallpaperError {}
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Output {
     pub name: String,               // "eDP-1", "HDMI-A-1"
     pub wallpaper: Option<String>,  // wallpaper id
@@ -157,6 +157,34 @@ impl OmarchyWallpaper {
     pub fn theme_hint(&self, output: &str) -> Option<String> {
         let w = self.current(output)?;
         w.theme_hint.clone().or_else(|| Some(format!("auto-{}", w.suggested_variant())))
+    }
+
+    /// Persist wallpaper registry + per-output assignments to JSON.
+    pub fn save_to(&self, path: &std::path::Path) -> Result<(), String> {
+        #[derive(serde::Serialize, serde::Deserialize)]
+        struct Disk { wallpapers: Vec<Wallpaper>, outputs: Vec<Output> }
+        let d = Disk { wallpapers: self.wallpapers.values().cloned().collect(),
+                       outputs: self.outputs.values().cloned().collect() };
+        let j = serde_json::to_string_pretty(&d).map_err(|e| e.to_string())?;
+        if let Some(p) = path.parent() { std::fs::create_dir_all(p).map_err(|e| e.to_string())?; }
+        std::fs::write(path, j).map_err(|e| e.to_string())
+    }
+
+    pub fn load_from(path: &std::path::Path) -> Result<Self, String> {
+        #[derive(serde::Serialize, serde::Deserialize)]
+        struct Disk { wallpapers: Vec<Wallpaper>, outputs: Vec<Output> }
+        let txt = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+        let d: Disk = serde_json::from_str(&txt).map_err(|e| e.to_string())?;
+        let mut m = Self::new();
+        for w in d.wallpapers { let _ = m.register(w); }
+        for o in d.outputs { m.outputs.insert(o.name.clone(), o); }
+        Ok(m)
+    }
+
+    pub fn state_path() -> std::path::PathBuf {
+        if let Ok(p) = std::env::var("SIGMAOS_WP_FILE") { return std::path::PathBuf::from(p); }
+        let home = std::env::var("HOME").unwrap_or_else(|_| "/tmp".into());
+        std::path::PathBuf::from(home).join(".local/share/sigmaos/wallpaper.json")
     }
 
     pub fn status_line(&self, output: &str) -> String {

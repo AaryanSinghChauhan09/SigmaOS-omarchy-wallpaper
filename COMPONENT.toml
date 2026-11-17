@@ -12,5 +12,5 @@ depends_on = ["SigmaOS-system"]
 
 [maturity]
 status = "Implemented"
-test_evidence = "cargo test --offline: 5 lib + 1 integration pass; wallpaper manager (registry, per-output set, cycle/random, dominant-color->theme hint) + working CLI"
+test_evidence = "cargo test --offline: 5 lib + 1 integration pass; wallpaper manager (registry, per-output set/cycle/random, theme hints) with JSON persistence + working CLI"
 next_milestone = "swww/hyprpaper backend + image color extraction"

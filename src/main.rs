@@ -41,7 +41,8 @@ fn usage() -> ! {
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args.is_empty() { usage(); }
-    let mut m = seed();
+    let state = OmarchyWallpaper::state_path();
+    let mut m = OmarchyWallpaper::load_from(&state).unwrap_or_else(|_| seed());
     let cmd = args[0].as_str();
     let rest = &args[1..];
     let out = rest.get(0).map(|s| s.as_str()).unwrap_or("eDP-1");
@@ -75,8 +76,10 @@ fn main() {
         _ => usage(),
     } })();
 
-    if let Err(e) = result {
-        eprintln!("omarchy-wallpaper: {e}");
-        exit(1);
+    match result {
+        Ok(()) => {
+            if let Err(e) = m.save_to(&state) { eprintln!("omarchy-wallpaper: warn: save: {e}"); }
+        }
+        Err(e) => { eprintln!("omarchy-wallpaper: {e}"); exit(1); }
     }
 }
