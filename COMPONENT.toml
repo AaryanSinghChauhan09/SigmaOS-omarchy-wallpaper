@@ -3,7 +3,7 @@ name = "SigmaOS-omarchy-wallpaper"
 tier = 2
 stability = "beta"
 language = "rust"
-description = "Wallpaper setter for SigmaOS inspired by Omarchy Linux"
+description = "Wallpaper manager"
 upstream = []
 
 [contract]
