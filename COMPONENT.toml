@@ -12,5 +12,5 @@ depends_on = ["SigmaOS-system"]
 
 [maturity]
 status = "Implemented"
-test_evidence = "Compiles and passes AAA unit tests"
-next_milestone = "Hardware and runtime integration"
+test_evidence = "cargo test --offline: 5 lib + 1 integration pass; wallpaper manager (registry, per-output set, cycle/random, dominant-color->theme hint) + working CLI"
+next_milestone = "swww/hyprpaper backend + image color extraction"
