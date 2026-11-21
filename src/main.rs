@@ -1,4 +1,4 @@
-//! SigmaOS-omarchy-wallpaper — wallpaper CLI.
+//! SigmaOS-wallpaper — wallpaper CLI.
 //!
 //! Usage:
 //!   omarchy-wallpaper list
@@ -9,7 +9,7 @@
 //!   omarchy-wallpaper random [output]
 //!   omarchy-wallpaper theme [output]   (suggested theme)
 
-use omarchy_wallpaper::{OmarchyWallpaper, Rgb, Wallpaper};
+use sigmaos_wallpaper::{OmarchyWallpaper, Rgb, Wallpaper};
 use std::process::exit;
 
 fn seed() -> OmarchyWallpaper {

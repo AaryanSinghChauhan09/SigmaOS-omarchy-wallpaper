@@ -1,5 +1,5 @@
 [component]
-name = "SigmaOS-omarchy-wallpaper"
+name = "SigmaOS-wallpaper"
 tier = 2
 stability = "beta"
 language = "rust"

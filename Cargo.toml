@@ -1,12 +1,12 @@
 [package]
-name = "SigmaOS-omarchy-wallpaper"
+name = "SigmaOS-wallpaper"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 description = "SigmaOS omarchy-wallpaper component"
 
 [lib]
-name = "omarchy_wallpaper"
+name = "sigmaos_wallpaper"
 path = "src/lib.rs"
 
 [dependencies]

@@ -1,4 +1,4 @@
-# SigmaOS-omarchy-wallpaper
+# SigmaOS-wallpaper
 
 Wallpaper setter for SigmaOS inspired by Omarchy Linux
 

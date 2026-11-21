@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-//! SigmaOS-omarchy-wallpaper — wallpaper manager with theme coupling.
+//! SigmaOS-wallpaper — wallpaper manager with theme coupling.
 //!
 //! Registry of wallpapers (image path + extracted dominant colors), set/
 //! cycle/random per output, and a hook that suggests the matching theme
